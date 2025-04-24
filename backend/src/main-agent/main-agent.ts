@@ -7,7 +7,8 @@ import {
 import { config } from "dotenv";
 import { delete_S3_bucket } from "../tools/delete-S3-bucket.js";
 import { ChatGroq } from "@langchain/groq";
-import { upload_object_to_bucket } from "../tools/upload-object-to-bucket.js";
+import { get_ec2_instances } from "../tools/get-EC2-instances.js";
+import { get_presigned_url } from "../tools/get_presigned_url.js";
 config()
 
 async function llmCall(state: { messages: any; }) {
@@ -54,19 +55,19 @@ function shouldContinue(state: { messages: any; }) {
   return "__end__";
 }
 
-const llm = new ChatOpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-  modelName: "gpt-4o-mini",
-});
-
-// const llm = new ChatGroq({
-//   model: "gemma2-9b-it",
-//   apiKey: process.env.GROQ_API_KEY,
-//   maxRetries: 2
+// const llm = new ChatOpenAI({
+//   apiKey: process.env.OPENAI_API_KEY,
+//   modelName: "gpt-4o-mini",
 // });
 
+const llm = new ChatGroq({
+  model: "llama3-70b-8192",
+  apiKey: process.env.GROQ_API_KEY,
+  maxRetries: 2
+});
 
-const tools = [create_S3_bucket, delete_S3_bucket, upload_object_to_bucket];
+
+const tools = [create_S3_bucket, delete_S3_bucket, get_ec2_instances, get_presigned_url];
 const toolsByName = Object.fromEntries(tools.map((tool) => [tool.name, tool]));
 const llmWithTools = llm.bindTools(tools);
 
@@ -92,11 +93,6 @@ const messages: {
 
 
 export async function generate_response (input: string) {
-  
-  // const messages = [{
-  //   role: "user",
-  //   content: input
-  // }]
 
   messages.push({
     role: "user",
@@ -109,7 +105,6 @@ export async function generate_response (input: string) {
     role: "assistant",
     content: `${result.messages[result.messages.length - 1].content}`
   })
-
   return `${result.messages[result.messages.length - 1].content}`
 
 }

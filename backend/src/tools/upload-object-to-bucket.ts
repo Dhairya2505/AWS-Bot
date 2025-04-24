@@ -39,11 +39,9 @@ export const upload_object_to_bucket = tool(
 
                 parallelUploads3.on("httpUploadProgress", (progress) => {
                 });
-
                 await parallelUploads3.done();
                 return 'file uploaded';
             } catch (error) {
-                console.log(error)
                 const err = await get_error(`${error}`)
                 return err
             }
