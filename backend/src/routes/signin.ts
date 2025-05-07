@@ -45,5 +45,4 @@ export const signin = async (req: Request, res: Response) => {
         return;
     }
 
-
 }

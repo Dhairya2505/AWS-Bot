@@ -7,6 +7,7 @@ import UserDuplicacy from './middlewares/UserDuplicacy.js';
 import CheckUser from './middlewares/CheckUser.js';
 import { signup } from './routes/signup.js';
 import { signin } from './routes/signin.js';
+import { get_chats } from './routes/get-chats.js';
 
 const app = express();
 
@@ -25,6 +26,7 @@ app.post(`/get-response`, get_response)
 app.post('/signup', UserDuplicacy, signup)
 app.get(`/signin`, CheckUser, signin)
 app.get(`/valid_token`, valid_token)
+app.get(`/chats`, get_chats)
 
 const PORT = process.env.PORT || 8000;
 app.listen(PORT, () => {

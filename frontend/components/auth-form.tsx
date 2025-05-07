@@ -71,6 +71,7 @@ export default function AuthForm() {
         },
         withCredentials: true,
       })
+      console.log(res)
       if (res.data.success) {
         router.push("/")
       } else {

@@ -14,7 +14,11 @@ import mongoose from "mongoose";
 
 const UsersSchema = new mongoose.Schema({
     userName : String,
-    Password : String
+    Password : String,
+    Chats: Array<{
+        "role": String,
+        "content": String
+    }>
 })
 
 const User = mongoose.model('user',UsersSchema);
